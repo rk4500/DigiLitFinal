@@ -3,6 +3,7 @@
     "three": "^0.173.0"
   },
   "devDependencies": {
+    "@tweenjs/tween.js": "^25.0.0",
     "vite": "^6.1.0"
   }
 }

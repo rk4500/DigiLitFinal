@@ -5,6 +5,9 @@
     font-family: Arial, sans-serif;
 }
 
+div {
+    display: flex;
+}
 /* Full-screen Three.js canvas */
 #bg {
     position: fixed;
@@ -35,7 +38,7 @@ nav {
     border-radius: 10px;
 }
 
-nav a {
+a {
     color: white;
     text-decoration: none;
     margin: 0 15px;
@@ -47,6 +50,10 @@ nav a:hover {
     color: #ff6347;
 }
 
+#content {
+    width: 100vw;
+    height: 50vh;
+}
 /* Fade transition */
 .fade-in {
     opacity: 1;
@@ -59,9 +66,34 @@ nav a:hover {
 
 /* Page Content */
 #page-content {
-    color: black;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
 }
 
+.title {
+    flex-direction: column;
+    height: auto;
+}
+
+.main-options {
+    height: 80%;
+    width: 80%;
+    justify-content: space-between;
+    align-items: center;
+}
+.option a{
+    border: 1px solid white;
+    border-radius: 15px;
+    font-size: 30px;
+    font-weight: 500;
+    padding: 2px 20px;
+    background-color: rgba(128, 128, 128, 0.192);
+}
+/* 
 .black {
     color: black !important;
-}
+} */
