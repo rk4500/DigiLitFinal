@@ -1,5 +1,5 @@
 // Function to Load Pages Dynamically
-function loadPage(page) {
+function loadPage(page, specfic=null) {
     fetch(page)
         .then(response => response.text())
         .then(html => {
