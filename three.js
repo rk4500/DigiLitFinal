@@ -35,7 +35,7 @@ scene.add(backDirectionalLight)
 
 // Adding Man
 var manModel;
-loader.load('/models/scene.gltf', function(gltf) {
+loader.load('models/scene.gltf', function(gltf) {
     // Getting wireframe
     // var object = gltf.scene;
     // object.traverse((node) => {
