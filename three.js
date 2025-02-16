@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-// import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Group, Easing, Tween } from '@tweenjs/tween.js'
 
@@ -7,7 +7,7 @@ import { Group, Easing, Tween } from '@tweenjs/tween.js'
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById("bg"), alpha: false });
-// const controls = new OrbitControls( camera, renderer.domElement );
+const controls = new OrbitControls( camera, renderer.domElement );
 const loader = new GLTFLoader();
 const group = new Group()
 
@@ -15,6 +15,10 @@ const group = new Group()
 renderer.setSize(window.innerWidth, window.innerHeight);
 camera.position.z = 15;
 document.body.appendChild(renderer.domElement);
+// controls.enablePan = false;
+// controls.enableZoom = false;
+// controls.enableRotate = false;
+var clock = new THREE.Clock();
 
 // Adding Light
 const directionalLight = new THREE.DirectionalLight(0xffffff);
@@ -35,7 +39,12 @@ scene.add(backDirectionalLight)
 
 // Adding Man
 var manModel;
-loader.load('models/scene.gltf', function(gltf) {
+var skeleton;
+var mixer;
+var actions = {};
+var currentAction;
+
+loader.load('models/fixed.glb', function(gltf) {
     // Getting wireframe
     // var object = gltf.scene;
     // object.traverse((node) => {
@@ -43,14 +52,21 @@ loader.load('models/scene.gltf', function(gltf) {
     //   node.material.wireframe = true;
     // });
     // scene.add(object);
-    
-    gltf.scene.traverse((child) => {
-        if (child.isMesh) {
-            manModel = child;
-        }
-    })
+
+    mixer = new THREE.AnimationMixer(gltf.scene);
+    for (let anim of gltf.animations) {
+        let action = mixer.clipAction(anim);
+        actions[anim.name] = action;
+    }
+    manModel = gltf.scene;
     gltf.scene.position.y = -7;
     scene.add(gltf.scene)
+
+    let animAction = actions['Appear'];
+    currentAction = animAction
+    animAction.clampWhenFinished = true;
+    animAction.setLoop(THREE.LoopOnce);
+    animAction.play();
 
 }, undefined, function(error) {
     console.error(error);
@@ -65,26 +81,50 @@ window.addEventListener("resize", () => {
 
 var buttonTweenSettings = {
     mental: {
-        model: {rotation: {x: 0, y: 0.25 * Math.PI, z: 0}},
-        camera: {position: {x: 0, y: 5, z: 7}},
+        model: {position: {x: -5, y: 0, z: 0}},
+        camera: {position: {x: -10, y: 0, z: 5}},
+        anim: 'Sitting'
     },
     physical: {
-        model: {rotation: {x: 0, y: 0, z: 0}},
-        camera: {position: {x: 0, y: 2, z: 9}}
+        model: {position: {x: 0, y: 1, z: 0}},
+        camera: {position: {x: 0, y: 4, z: 10}},
+        anim: 'BackDouble'
     },
     home: {
-        model: {rotation: {x: 0, y: 0, z: 0}},
-        camera: {position: {x: 0, y: 0, z: 15}}
+        model: {position: {x: 0, y: 0, z: 0}},
+        camera: {position: {x: 0, y: 0, z: 15}},
+        anim: 'Appear'
     }
 }
 function transition(param) {
     var settings = buttonTweenSettings[param];
 
-    const manTween = new Tween(manModel.rotation).to(settings.model.rotation, 500).easing(Easing.Quadratic.InOut).start();
+    // const manTween = new Tween(manModel.rotation).to(settings.model.rotation, 500).easing(Easing.Quadratic.InOut).start();
 
     const camManTween = new Tween(camera.position).to(settings.camera.position, 500).easing(Easing.Quadratic.InOut).start();
+    const controlTween = new Tween(controls.target).to(settings.model.position, 500).easing(Easing.Quadratic.InOut).onUpdate((pos) => {controls.target.set(pos.x, pos.y, pos.z);}).start();
 
-    group.add(manTween);
+    // console.log(controls.target);
+    // controls.target = new THREE.Vector3(-6, 0, 0);
+    // controls.target = new THREE.Vector3( -10, 10, 0);
+    // console.log(controls.target);
+
+    let animAction = actions[settings.anim];
+    if(currentAction != animAction) {
+        console.log(animAction);
+        animAction.reset();
+        animAction.clampWhenFinished = true;
+        animAction.setLoop(THREE.LoopOnce);
+        animAction.play();
+        currentAction.crossFadeTo(animAction, 1, true);
+        // currentAction.stop();
+        currentAction = animAction;
+    }
+    // animAction.timeScale = 2;
+    // animAction.play();
+
+    // group.add(manTween);
+    group.add(controlTween);
     group.add(camManTween);
 }
 
@@ -94,13 +134,14 @@ window.transition = transition;
 // var mentalBtn = document.getElementById('mental');
 // mentalBtn.addEventListener('click', () => transition('mental'))
 
-
 animate();
-
 function animate() {
     requestAnimationFrame(animate);
     // torus.rotation.x += 0.01;
     // torus.rotation.y += 0.01;
+    mixer.update(clock.getDelta());
     group.update();
+    controls.update();
     renderer.render(scene, camera);
 }
+
