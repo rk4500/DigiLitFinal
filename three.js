@@ -30,13 +30,6 @@ backDirectionalLight.position.y = 3;
 scene.add(directionalLight);
 scene.add(backDirectionalLight)
 
-// Adding Random Taurus
-// const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
-// const material = new THREE.MeshBasicMaterial({ color: 0xff6347, wireframe: true });
-// const torus = new THREE.Mesh(geometry, material);
-// scene.add(torus);
-
-
 // Adding Man
 var manModel;
 var skeleton;
@@ -58,6 +51,15 @@ loader.load('models/fixed.glb', function(gltf) {
         let action = mixer.clipAction(anim);
         actions[anim.name] = action;
     }
+
+    // Skeleton Helper
+    // gltf.scene.traverse((node) => {
+    //     if (node.isSkinnedMesh) {
+    //         const helper = new THREE.SkeletonHelper( node );
+    //         scene.add( helper );
+    //     }
+    // });
+
     manModel = gltf.scene;
     gltf.scene.position.y = -7;
     scene.add(gltf.scene)
@@ -87,7 +89,7 @@ var buttonTweenSettings = {
     },
     physical: {
         model: {position: {x: 0, y: 1, z: 0}},
-        camera: {position: {x: 0, y: 4, z: 10}},
+        camera: {position: {x: 0, y: 3, z: 11}},
         anim: 'BackDouble'
     },
     home: {
@@ -99,46 +101,28 @@ var buttonTweenSettings = {
 function transition(param) {
     var settings = buttonTweenSettings[param];
 
-    // const manTween = new Tween(manModel.rotation).to(settings.model.rotation, 500).easing(Easing.Quadratic.InOut).start();
-
     const camManTween = new Tween(camera.position).to(settings.camera.position, 500).easing(Easing.Quadratic.InOut).start();
     const controlTween = new Tween(controls.target).to(settings.model.position, 500).easing(Easing.Quadratic.InOut).onUpdate((pos) => {controls.target.set(pos.x, pos.y, pos.z);}).start();
 
-    // console.log(controls.target);
-    // controls.target = new THREE.Vector3(-6, 0, 0);
-    // controls.target = new THREE.Vector3( -10, 10, 0);
-    // console.log(controls.target);
-
     let animAction = actions[settings.anim];
     if(currentAction != animAction) {
-        console.log(animAction);
         animAction.reset();
         animAction.clampWhenFinished = true;
         animAction.setLoop(THREE.LoopOnce);
         animAction.play();
         currentAction.crossFadeTo(animAction, 1, true);
-        // currentAction.stop();
         currentAction = animAction;
     }
-    // animAction.timeScale = 2;
-    // animAction.play();
 
-    // group.add(manTween);
     group.add(controlTween);
     group.add(camManTween);
 }
 
 window.transition = transition;
 
-// Old method of transitioning between scenes
-// var mentalBtn = document.getElementById('mental');
-// mentalBtn.addEventListener('click', () => transition('mental'))
-
 animate();
 function animate() {
     requestAnimationFrame(animate);
-    // torus.rotation.x += 0.01;
-    // torus.rotation.y += 0.01;
     mixer.update(clock.getDelta());
     group.update();
     controls.update();
