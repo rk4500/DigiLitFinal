@@ -42,7 +42,7 @@ var mixer;
 var actions = {};
 var currentAction;
 
-loader.load('models/fixed.glb', function(gltf) {
+loader.load('models/learn.glb', function(gltf) {
     // Getting wireframe
     // var object = gltf.scene;
     // object.traverse((node) => {
@@ -55,6 +55,7 @@ loader.load('models/fixed.glb', function(gltf) {
     for (let anim of gltf.animations) {
         let action = mixer.clipAction(anim);
         actions[anim.name] = action;
+        console.log(anim);
     }
 
     // Skeleton Helper
@@ -91,6 +92,16 @@ loader.load('models/chair.glb', function(gltf) {
     scene.add(chair);
 });
 
+// Adding Table
+var table;
+loader.load('models/table.glb', function(gltf) {
+    table = gltf.scene;
+    table.position.z = 20;
+    table.position.y = -7;
+    buttonTweenSettings.learning.miscObj = table.position;
+    scene.add(gltf.scene);
+});
+
 // Handle Window Resize
 window.addEventListener("resize", () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -99,6 +110,11 @@ window.addEventListener("resize", () => {
 });
 
 var buttonTweenSettings = {
+    home: {
+        model: {position: {x: 0, y: 0, z: 0}},
+        camera: {position: {x: 0, y: 0, z: 15}},
+        anim: 'Appear'
+    },
     mental: {
         model: {position: {x: -5, y: 0, z: 0}},
         camera: {position: {x: -10, y: 0, z: 5}},
@@ -112,15 +128,20 @@ var buttonTweenSettings = {
         camera: {position: {x: 0, y: 3, z: 11}},
         anim: 'BackDouble'
     },
-    home: {
-        model: {position: {x: 0, y: 0, z: 0}},
-        camera: {position: {x: 0, y: 0, z: 15}},
-        anim: 'Appear'
+    learning: {
+        model: {position: {x: -5, y: 0, z: 0}},
+        camera: {position: {x: -10, y: 0, z: 5}},
+        anim: 'Learn',
+        misc: true,
+        miscObj: table,
+        miscTarget: {x: 0, y: -7, z: 0}
     }
 }
 function transition(param) {
+    console.log(buttonTweenSettings);
+    console.log(param);
     var settings = buttonTweenSettings[param];
-
+    console.log(settings);
     let animAction = actions[settings.anim];
     if(currentAction != animAction) {
         animAction.reset();
