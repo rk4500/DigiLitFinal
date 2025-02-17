@@ -5,15 +5,20 @@ import { Group, Easing, Tween } from '@tweenjs/tween.js'
 
 // Initialize Three.js Scene
 const scene = new THREE.Scene();
+scene.fog = new THREE.Fog('#232323', 15, 18);
+scene.background = new THREE.Color('#232323');
+
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 15;
+
 const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById("bg"), alpha: false });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+
 const controls = new OrbitControls( camera, renderer.domElement );
 const loader = new GLTFLoader();
 const group = new Group()
 
-// scene.fog = new THREE.Fog( 0xcccccc, 500, 600);
-renderer.setSize(window.innerWidth, window.innerHeight);
-camera.position.z = 15;
 document.body.appendChild(renderer.domElement);
 // controls.enablePan = false;
 // controls.enableZoom = false;
@@ -74,6 +79,18 @@ loader.load('models/fixed.glb', function(gltf) {
     console.error(error);
 });
 
+
+// Adding Chair
+var chair;
+
+loader.load('models/chair.glb', function(gltf) {
+    chair = gltf.scene;
+    chair.position.z = -5;
+    chair.position.y = -7;
+    buttonTweenSettings.mental.miscObj = chair.position;
+    scene.add(chair);
+});
+
 // Handle Window Resize
 window.addEventListener("resize", () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -85,7 +102,10 @@ var buttonTweenSettings = {
     mental: {
         model: {position: {x: -5, y: 0, z: 0}},
         camera: {position: {x: -10, y: 0, z: 5}},
-        anim: 'Sitting'
+        anim: 'Sitting',
+        misc: true,
+        miscObj: chair,
+        miscTarget: {x: 0, y: -7, z: 0}
     },
     physical: {
         model: {position: {x: 0, y: 1, z: 0}},
@@ -101,18 +121,22 @@ var buttonTweenSettings = {
 function transition(param) {
     var settings = buttonTweenSettings[param];
 
-    const camManTween = new Tween(camera.position).to(settings.camera.position, 500).easing(Easing.Quadratic.InOut).start();
-    const controlTween = new Tween(controls.target).to(settings.model.position, 500).easing(Easing.Quadratic.InOut).onUpdate((pos) => {controls.target.set(pos.x, pos.y, pos.z);}).start();
-
     let animAction = actions[settings.anim];
     if(currentAction != animAction) {
         animAction.reset();
         animAction.clampWhenFinished = true;
         animAction.setLoop(THREE.LoopOnce);
         animAction.play();
-        currentAction.crossFadeTo(animAction, 1, true);
+        currentAction.crossFadeTo(animAction, 0.5, true);
         currentAction = animAction;
     }
+    
+    if(settings.misc) {
+        const miscTween = new Tween(settings.miscObj).to(settings.miscTarget, 500).easing(Easing.Quadratic.InOut).start();
+        group.add(miscTween);
+    }
+    const camManTween = new Tween(camera.position).to(settings.camera.position, 500).easing(Easing.Quadratic.InOut).start();
+    const controlTween = new Tween(controls.target).to(settings.model.position, 500).easing(Easing.Quadratic.InOut).onUpdate((pos) => {controls.target.set(pos.x, pos.y, pos.z);}).start();
 
     group.add(controlTween);
     group.add(camManTween);
