@@ -71,7 +71,7 @@ loader.load('models/chair.glb', function(gltf) {
     chair = gltf.scene;
     chair.position.z = -5;
     chair.position.y = -7;
-    buttonTweenSettings.mental.miscObj = chair.position;
+    buttonTweenSettings.objects.chair.object = chair.position;
     scene.add(chair);
 });
 
@@ -81,7 +81,7 @@ loader.load('models/table.glb', function(gltf) {
     table = gltf.scene;
     table.position.z = 20;
     table.position.y = -7;
-    buttonTweenSettings.learning.miscObj = table.position;
+    buttonTweenSettings.objects.table.object = table.position;
     scene.add(gltf.scene);
 });
 
@@ -102,9 +102,7 @@ var buttonTweenSettings = {
         model: {position: {x: -5, y: 0, z: 0}},
         camera: {position: {x: -10, y: 0, z: 5}},
         anim: 'Sitting',
-        misc: true,
-        miscObj: chair,
-        miscTarget: {x: 0, y: -7, z: 0}
+        miscObjs: ['chair'],
     },
     physical: {
         model: {position: {x: 0, y: 1, z: 0}},
@@ -115,9 +113,24 @@ var buttonTweenSettings = {
         model: {position: {x: -5, y: 0, z: 0}},
         camera: {position: {x: -10, y: 0, z: 5}},
         anim: 'Learn',
-        misc: true,
-        miscObj: table,
-        miscTarget: {x: 0, y: -7, z: 0}
+        miscObjs: ['table', 'chair']
+    },
+    objects: {
+        chair: {
+            object: chair,
+            position: {x: 0, y: -7, z: 0},
+            default: {x: 0, y: -7, z: -5}
+        },
+        table: {
+            object: table,
+            position: {x: 0, y: -7, z: 0},
+            default: {x: 0, y: -7, z: 20}
+        },
+        // apple: {
+        //     // object: apple,
+        //     position: {x: 0, y: -5, z: 3},
+        //     default: {x: 0, y: 0, z: 0}
+        // }
     }
 }
 function transition(param) {
@@ -132,10 +145,34 @@ function transition(param) {
         currentAction = animAction;
     }
     
-    if(settings.misc) {
-        const miscTween = new Tween(settings.miscObj).to(settings.miscTarget, 500).easing(Easing.Quadratic.InOut).start();
-        group.add(miscTween);
+    if(settings.miscObjs) {
+        for(const obj of settings.miscObjs) {
+            let item = buttonTweenSettings.objects[obj];
+            console.log(obj, item);
+            group.add(new Tween(item.object).to(item.position, 500).start());
+        };
+
+        for(const obj in buttonTweenSettings.objects){
+            console.log(obj, settings.miscObjs);
+            if(!settings.miscObjs.includes(obj)) {
+                let item = buttonTweenSettings.objects[obj];
+                console.log(obj, item);
+                group.add(new Tween(item.object).to(item.default, 500).start());
+            }
+        }
     }
+    else {
+        for(const obj in buttonTweenSettings.objects){
+            let item = buttonTweenSettings.objects[obj];
+            console.log(obj, item);
+            group.add(new Tween(item.object).to(item.default, 500).start());
+        }
+    }
+
+    // if(settings.misc) {
+    //     const miscTween = new Tween(settings.miscObj).to(settings.miscTarget, 500).easing(Easing.Quadratic.InOut).start();
+    //     group.add(miscTween);
+    // }
     const camManTween = new Tween(camera.position).to(settings.camera.position, 500).easing(Easing.Quadratic.InOut).start();
     const controlTween = new Tween(controls.target).to(settings.model.position, 500).easing(Easing.Quadratic.InOut).onUpdate((pos) => {controls.target.set(pos.x, pos.y, pos.z);}).start();
 
