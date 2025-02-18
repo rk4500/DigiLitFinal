@@ -11,6 +11,7 @@ scene.background = new THREE.Color('#000000');
 // Camera setup
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.z = 20;
+camera.position.y = 7;
 
 // Renderer setup
 const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById("bg"), alpha: false });
@@ -23,9 +24,9 @@ const loader = new GLTFLoader();
 const group = new Group()
 
 document.body.appendChild(renderer.domElement);
-controls.enablePan = false;
-controls.enableZoom = false;
-controls.enableRotate = false;
+// controls.enablePan = false;
+// controls.enableZoom = false;
+// controls.enableRotate = false;
 var clock = new THREE.Clock();
 
 // Adding Light
@@ -45,7 +46,7 @@ var mixer;
 var actions = {};
 var currentAction;
 
-loader.load('models/learn.glb', function(gltf) {
+loader.load('models/physical.glb', function(gltf) {
     mixer = new THREE.AnimationMixer(gltf.scene);
     for (let anim of gltf.animations) {
         let action = mixer.clipAction(anim);
@@ -72,7 +73,7 @@ var chair;
 
 loader.load('models/chair.glb', function(gltf) {
     chair = gltf.scene;
-    chair.position.z = -5;
+    chair.position.z = -15;
     chair.position.y = -7;
     buttonTweenSettings.objects.chair.object = chair.position;
     scene.add(chair);
@@ -85,6 +86,26 @@ loader.load('models/table.glb', function(gltf) {
     table.position.z = 30;
     table.position.y = -7;
     buttonTweenSettings.objects.table.object = table.position;
+    scene.add(gltf.scene);
+});
+
+// Adding Apple
+var apple;
+loader.load('models/apple.glb', function(gltf) {
+    apple = gltf.scene;
+    apple.position.z = 0;
+    apple.position.y = 5;
+    buttonTweenSettings.objects.apple.object = apple.position;
+    scene.add(gltf.scene);
+});
+
+// Adding Dumbell
+var dumbell;
+loader.load('models/dumbell.glb', function(gltf) {
+    dumbell = gltf.scene;
+    dumbell.position.z = 0;
+    dumbell.position.y = 5;
+    buttonTweenSettings.objects.dumbell.object = dumbell.position;
     scene.add(gltf.scene);
 });
 
@@ -124,22 +145,44 @@ var buttonTweenSettings = {
         camera: {position: {x: 0, y: 6, z: 9}},
         anim: 'BackDouble'
     },
+    fitness: {
+        model: {position: {x: 0, y: 3.6, z: 5.2}},
+        camera: {position: {x: -4.5, y: 5.3, z: 8.8}},
+        anim: 'Dumbell',
+        miscObjs: ['dumbell']
+    },
+    nutrition: {
+        model: {position: {x: -6.2, y: 1.3, z: 4.6}},
+        camera: {position: {x: 6.6, y: 4.4, z: 11.7}},
+        anim: 'Apple',
+        miscObjs: ['apple']
+    },
+    about: {
+        model: {position: {x: 0, y: 0, z: 0}},
+        camera: {position: {x: 0, y: 5, z: 20}},
+        anim: 'Appear'
+    },
     objects: {
         chair: {
             object: chair,
             position: {x: 0, y: -7, z: 0},
-            default: {x: 0, y: -7, z: -5}
+            default: {x: 0, y: -7, z: -15}
         },
         table: {
             object: table,
             position: {x: 0, y: -7, z: 0},
             default: {x: 0, y: -7, z: 30}
         },
-        // apple: {
-        //     // object: apple,
-        //     position: {x: 0, y: -5, z: 3},
-        //     default: {x: 0, y: 0, z: 0}
-        // }
+        apple: {
+            object: apple,
+            position: {x: 0, y: -7, z: 0},
+            default: {x: 0, y: 5, z: 0}
+        },
+        dumbell: {
+            object: dumbell,
+            position: {x: 0, y: -7, z: 0},
+            default: {x: 0, y: 5, z: 0}
+        }
     }
 }
 function transition(param) {
@@ -157,20 +200,20 @@ function transition(param) {
     if(settings.miscObjs) {
         for(const obj of settings.miscObjs) {
             let item = buttonTweenSettings.objects[obj];
-            group.add(new Tween(item.object).to(item.position, 500).start());
+            group.add(new Tween(item.object).to(item.position, 500).easing(Easing.Quadratic.Out).start());
         };
 
         for(const obj in buttonTweenSettings.objects){
             if(!settings.miscObjs.includes(obj)) {
                 let item = buttonTweenSettings.objects[obj];
-                group.add(new Tween(item.object).to(item.default, 500).start());
+                group.add(new Tween(item.object).to(item.default, 500).easing(Easing.Quadratic.In).start());
             }
         }
     }
     else {
         for(const obj in buttonTweenSettings.objects){
             let item = buttonTweenSettings.objects[obj];
-            group.add(new Tween(item.object).to(item.default, 500).start());
+            group.add(new Tween(item.object).to(item.default, 500).easing(Easing.Quadratic.In).start());
         }
     }
 
