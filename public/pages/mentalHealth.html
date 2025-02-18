@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mental</title>
+    <script>
+      if (window.location.pathname !== '/') {
+          window.location.href = '/';
+      }
+    </script>
 </head>
 <body>
     <div class="title">
@@ -11,8 +16,7 @@
         <p>What would you like to work on today?</p>
       </div>
       <div class="main-options">
-        <div class="option" id="health"><a href="#" onclick="loadPage('mentalHealth.html', 'mentalHealth'); transition('mentalHealth')">Mental</a></div>
-        <div class="option" id="learning"><a href="#" onclick="loadPage('learning.html', 'mentalHealth'); transition('mental')">Physical</a></div>
+        Something about mental health  
       </div>
 </body>
 </html>

@@ -5,8 +5,8 @@ import { Group, Easing, Tween } from '@tweenjs/tween.js'
 
 // Initialize Three.js Scene
 const scene = new THREE.Scene();
-scene.fog = new THREE.Fog('#232323', 15, 18);
-scene.background = new THREE.Color('#232323');
+scene.fog = new THREE.Fog('#000000', 15, 18); // #232323
+scene.background = new THREE.Color('#000000');
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.z = 15;
@@ -43,28 +43,11 @@ var actions = {};
 var currentAction;
 
 loader.load('models/learn.glb', function(gltf) {
-    // Getting wireframe
-    // var object = gltf.scene;
-    // object.traverse((node) => {
-    //   if (!node.isMesh) return;
-    //   node.material.wireframe = true;
-    // });
-    // scene.add(object);
-
     mixer = new THREE.AnimationMixer(gltf.scene);
     for (let anim of gltf.animations) {
         let action = mixer.clipAction(anim);
         actions[anim.name] = action;
-        console.log(anim);
     }
-
-    // Skeleton Helper
-    // gltf.scene.traverse((node) => {
-    //     if (node.isSkinnedMesh) {
-    //         const helper = new THREE.SkeletonHelper( node );
-    //         scene.add( helper );
-    //     }
-    // });
 
     manModel = gltf.scene;
     gltf.scene.position.y = -7;
@@ -138,10 +121,7 @@ var buttonTweenSettings = {
     }
 }
 function transition(param) {
-    console.log(buttonTweenSettings);
-    console.log(param);
     var settings = buttonTweenSettings[param];
-    console.log(settings);
     let animAction = actions[settings.anim];
     if(currentAction != animAction) {
         animAction.reset();
