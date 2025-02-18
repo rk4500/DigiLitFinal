@@ -4,15 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Persistent 3D Background</title>
- <script type="importmap">
-        {
-          "imports": {
-            "three": "https://cdn.jsdelivr.net/npm/three@0.173.0/build/three.module.js",
-            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.173.0/examples/jsm/"
-          }
-        }
-      </script>
-  <script type="module" crossorigin src="/DigiLitFinal/assets/index-DFsSBzc_.js"></script>
+  <script type="module" crossorigin src="/DigiLitFinal/assets/index-dISxCTM6.js"></script>
   <link rel="stylesheet" crossorigin href="/DigiLitFinal/assets/index-L89DT6Y0.css">
 </head>
 <body>
@@ -22,9 +14,9 @@
     <!-- Content Area -->
     <div id="content">
         <nav>
-            <a href="#" onclick="loadPage('home.html'); transition('home')">Home</a>
-            <a href="#" onclick="loadPage('mental.html'); transition('mental')">Mental</a>
-            <a href="#" onclick="loadPage('physical.html'); transition('physical')">Physical</a>
+            <a href="home" id="home">Home</a>
+            <a href="mental" id='mental'>Mental</a>
+            <a href="physical" id="physical">Physical</a>
         </nav>
         <div id="page-content" class="fade-in">
           <div class="title">
@@ -32,13 +24,13 @@
             <p>What would you like to work on today?</p>
           </div>
           <div class="main-options">
-            <div class="option" id="mental"><a href="#" onclick="loadPage('mental.html', 'mental'); transition('mental')">Mental</a></div>
-            <div class="option" id="physical"><a href="#" onclick="loadPage('physical.html', 'physical'); transition('physical')">Physical</a></div>
+            <div class="option" id="mental"><a href="mental" id='mental'>Mental</a></div>
+            <div class="option" id="physical"><a href="physical" id="physical">Physical</a></div>
           </div>
         </div>
     </div>
 
-    <!-- -->
-    <script src="main.js"></script>
+    <!-- Scripts -->
+    <script src="main.js"></script>
 </body>
 </html>
