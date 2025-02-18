@@ -8,21 +8,24 @@ const scene = new THREE.Scene();
 scene.fog = new THREE.Fog('#000000', 15, 18); // #232323
 scene.background = new THREE.Color('#000000');
 
+// Camera setup
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.z = 15;
+camera.position.z = 20;
 
+// Renderer setup
 const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById("bg"), alpha: false });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 
+// Orbit control Setup
 const controls = new OrbitControls( camera, renderer.domElement );
 const loader = new GLTFLoader();
 const group = new Group()
 
 document.body.appendChild(renderer.domElement);
-// controls.enablePan = false;
-// controls.enableZoom = false;
-// controls.enableRotate = false;
+controls.enablePan = false;
+controls.enableZoom = false;
+controls.enableRotate = false;
 var clock = new THREE.Clock();
 
 // Adding Light
@@ -79,7 +82,7 @@ loader.load('models/chair.glb', function(gltf) {
 var table;
 loader.load('models/table.glb', function(gltf) {
     table = gltf.scene;
-    table.position.z = 20;
+    table.position.z = 30;
     table.position.y = -7;
     buttonTweenSettings.objects.table.object = table.position;
     scene.add(gltf.scene);
@@ -95,7 +98,7 @@ window.addEventListener("resize", () => {
 var buttonTweenSettings = {
     home: {
         model: {position: {x: 0, y: 0, z: 0}},
-        camera: {position: {x: 0, y: 0, z: 15}},
+        camera: {position: {x: 0, y: 0, z: 13}},
         anim: 'Appear'
     },
     mental: {
@@ -104,16 +107,22 @@ var buttonTweenSettings = {
         anim: 'Sitting',
         miscObjs: ['chair'],
     },
-    physical: {
-        model: {position: {x: 0, y: 1, z: 0}},
-        camera: {position: {x: 0, y: 3, z: 11}},
-        anim: 'BackDouble'
+    mentalHealth: {
+        model: {position: {x: -5, y: 0, z: 0}},
+        camera: {position: {x: -10, y: 0, z: 0}},
+        anim: 'Sitting',
+        miscObjs: ['chair']
     },
     learning: {
-        model: {position: {x: -5, y: 0, z: 0}},
-        camera: {position: {x: -10, y: 0, z: 5}},
+        model: {position: {x: -8, y: 0, z: 0}},
+        camera: {position: {x: -12, y: 0, z: 5}},
         anim: 'Learn',
         miscObjs: ['table', 'chair']
+    },
+    physical: {
+        model: {position: {x: 0, y: 2, z: 0}},
+        camera: {position: {x: 0, y: 6, z: 9}},
+        anim: 'BackDouble'
     },
     objects: {
         chair: {
@@ -124,7 +133,7 @@ var buttonTweenSettings = {
         table: {
             object: table,
             position: {x: 0, y: -7, z: 0},
-            default: {x: 0, y: -7, z: 20}
+            default: {x: 0, y: -7, z: 30}
         },
         // apple: {
         //     // object: apple,
@@ -148,15 +157,12 @@ function transition(param) {
     if(settings.miscObjs) {
         for(const obj of settings.miscObjs) {
             let item = buttonTweenSettings.objects[obj];
-            console.log(obj, item);
             group.add(new Tween(item.object).to(item.position, 500).start());
         };
 
         for(const obj in buttonTweenSettings.objects){
-            console.log(obj, settings.miscObjs);
             if(!settings.miscObjs.includes(obj)) {
                 let item = buttonTweenSettings.objects[obj];
-                console.log(obj, item);
                 group.add(new Tween(item.object).to(item.default, 500).start());
             }
         }
@@ -164,15 +170,10 @@ function transition(param) {
     else {
         for(const obj in buttonTweenSettings.objects){
             let item = buttonTweenSettings.objects[obj];
-            console.log(obj, item);
             group.add(new Tween(item.object).to(item.default, 500).start());
         }
     }
 
-    // if(settings.misc) {
-    //     const miscTween = new Tween(settings.miscObj).to(settings.miscTarget, 500).easing(Easing.Quadratic.InOut).start();
-    //     group.add(miscTween);
-    // }
     const camManTween = new Tween(camera.position).to(settings.camera.position, 500).easing(Easing.Quadratic.InOut).start();
     const controlTween = new Tween(controls.target).to(settings.model.position, 500).easing(Easing.Quadratic.InOut).onUpdate((pos) => {controls.target.set(pos.x, pos.y, pos.z);}).start();
 

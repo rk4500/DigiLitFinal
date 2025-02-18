@@ -1,8 +1,10 @@
+/* General Section Starts */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: Montserrat, Arial, sans-serif;
+    font-size: 16px;
 }
 
 div {
@@ -25,24 +27,29 @@ div {
     color: white;
     text-align: center;
     padding: 50px;
+    padding-top: 80px;
 }
 
 /* Navigation menu */
 nav {
     position: fixed;
+    width: 1120px;
     top: 10px;
     left: 50%;
     transform: translateX(-50%);
     background: rgba(0, 0, 0, 0.6);
     padding: 10px 20px;
     border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 a {
     color: white;
     text-decoration: none;
     margin: 0 15px;
-    font-size: 18px;
+    font-size: 24px;
     transition: color 0.3s ease-in-out;
 }
 
@@ -50,9 +57,16 @@ nav a:hover {
     color: #ff6347;
 }
 
+#home {
+    font-size: 32px;
+    font-weight: 600;
+    font-family: "Bebas Neue", Arial, sans-serif;
+}
+
 #content {
     width: 100vw;
-    height: 50vh;
+    height: 100vh;
+    justify-content: center;
 }
 /* Fade transition */
 .fade-in {
@@ -67,7 +81,7 @@ nav a:hover {
 /* Page Content */
 #page-content {
     height: 100%;
-    width: 100%;
+    width: 1120px;
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -77,13 +91,19 @@ nav a:hover {
 .title {
     flex-direction: column;
     height: auto;
+    width: 80%;
+}
+
+.title>h1 {
+    font-size: 22px;
 }
 
 .main-options {
     height: 80%;
-    width: 80%;
+    width: 100%;
     justify-content: space-between;
     align-items: center;
+    padding: 0 25px;
 }
 .option a{
     border: 1px solid white;
@@ -93,10 +113,73 @@ nav a:hover {
     padding: 2px 20px;
     background-color: rgba(128, 128, 128, 0.192);
 }
-/* 
-.black {
-    color: black !important;
-} */
- .color {
-    color: #232323;
- }
+
+.information-main {
+    width: 50%;
+    position: relative;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    padding: 20px;
+}
+/* General Section Ends */
+
+
+ /* Mental Health Section Starts*/
+.mental-health {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+h2 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+ul {
+    list-style-type: disc;
+    margin-left: 20px;
+    padding-left: 10px;
+}
+
+li {
+    margin-bottom: 8px;
+    font-size: 1em;
+    line-height: 1.5;
+}
+
+strong {
+    font-weight: bold;
+}
+/* Mental Health Section Ends */
+
+
+ /* Learning Section Starts */
+ .productivity {
+    top: 0;
+    right: 50%;
+    transform: translateX(50%);
+    flex-grow: 1;
+}
+h2 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+ul {
+    list-style-type: disc;
+    margin-left: 20px;
+    padding-left: 10px;
+}
+
+li {
+    margin-bottom: 8px;
+    font-size: 1em;
+    line-height: 1.5;
+}
+
+strong {
+    font-weight: bold;
+}
+
+ /* Learning Section Ends */
