@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404</title>
+    <script>
+        var requestedPage = window.location.pathname.split("/").at(-1);
+        window.location.replace("/?redirect=" + requestedPage);
+    </script>
 </head>
 <body>
-    Doesn't Exist
+    Oops! This page is still under construction.
+    <a href="home" id="home">Click Here to go Home</a>
 </body>
 </html>
