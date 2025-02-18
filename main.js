@@ -37,7 +37,6 @@ window.addEventListener("popstate", (event) => {
 window.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
     const currentPage = urlParams.get("redirect") || window.location.pathname.split('/').at(-1) ||"home";  // Default to home
-    loadPage(currentPage, false); 
     setTimeout(() => {
         loadPage(currentPage, false);  
     }, 100);
