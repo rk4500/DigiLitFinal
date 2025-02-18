@@ -12,7 +12,7 @@ function loadPage(page, backflag=false) {
     contentDiv.classList.add("fade-out");
 
     setTimeout(() => {
-        fetch('pages/${page}.html')
+        fetch(`pages/${page}.html`)
             .then(response => {return response.text();})
             .then(html => {
                 contentDiv.innerHTML = html;
