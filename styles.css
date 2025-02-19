@@ -244,3 +244,52 @@ strong {
     display: inline-block;
 }
  /* About Section Ends */
+
+ @media (max-width: 1200px) {
+    nav {
+        width: 90%;
+    }
+    #page-content {
+        width: 100%;
+    }
+ }
+
+ @media (max-width: 1080px) {
+    .information-main {
+        font-size: 1.7vw;
+    }
+    .information-main li {
+        font-size: 1.5vw;
+    }
+ }
+
+ @media (max-width: 850px) {
+    #content {
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+    #bg {
+        position: absolute;
+    }
+    .main-options {
+        padding-top: 20px;
+        align-items: start;
+        justify-content: center;
+    }
+    .information-main {
+        margin-top: 80vh;
+        width: 100%;
+        font-size: 5vw;
+    }
+    .information-main li, .information-main strong {
+        font-size: 4vw;
+    }
+    nav {
+        background: rgba(0, 0, 0, 1);
+        border-radius: 0px;
+        width: 100vw;
+        top: 0;
+        padding-top: 20px;
+        z-index: 3
+    }
+ }
