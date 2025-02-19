@@ -1,7 +1,7 @@
 let currentAction = 'home';
 let lastAction;
 
-function loadPage(page, backflag=false) {
+function loadPage(page, direct=false) {
 
     // Saving Anim
     lastAction = currentAction;
@@ -38,8 +38,8 @@ window.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
     const currentPage = urlParams.get("redirect") || window.location.pathname.split('/').at(-1) ||"home";  // Default to home
     setTimeout(() => {
-        loadPage(currentPage, false);  
-    }, 100);
+        loadPage(currentPage, true);  
+    }, 1000);
 });
 
 window.addEventListener("click", (event) => {
