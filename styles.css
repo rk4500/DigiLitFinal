@@ -11,6 +11,63 @@
 div {
     display: flex;
 }
+
+.jc-c {
+    justify-content: center;
+}
+
+.ai-c {
+    align-items: center;
+}
+
+.logo > img {
+    border-radius: 5px;
+}
+
+#loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000000; /* minimalist black background */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  font-family: sans-serif;
+}
+
+.loader-icon {
+  width: 60px;
+  height: 60px;
+  animation: pulse 1.2s infinite ease-in-out;
+  margin-bottom: 1rem;
+}
+
+@keyframes pulse {
+  0%   { transform: scale(1);   opacity: 1; }
+  50%  { transform: scale(1.2); opacity: 0.6; }
+  100% { transform: scale(1);   opacity: 1; }
+}
+
+#loader {
+  transition: opacity 0.5s ease;
+}
+#loader.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+#loading-text {
+  font-size: 1rem;
+  color: #ffffff;
+  margin-top: 0.5rem;
+}
+
+
+
+
 /* Full-screen Three.js canvas */
 #bg {
     position: fixed;
@@ -55,9 +112,24 @@ a {
     transition: color 0.3s ease-in-out;
 }
 
+p {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 24px;
+    transition: color 0.3s ease-in-out;
+}
+
 nav a:hover {
     color: #ff6347;
 }
+
+.logo-container:hover p{
+    cursor: pointer;
+    color: #ff6347
+}
+
+
 
 #home {
     font-size: 32px;
@@ -268,9 +340,12 @@ strong {
         overflow-x: hidden;
         overflow-y: scroll;
     }
-    #bg {
-        position: absolute;
+     body {
+        min-height: 200vh; /* just for testing */
     }
+    /* #bg {
+        position: absolute;
+    } */
     .main-options {
         padding-top: 20px;
         align-items: start;

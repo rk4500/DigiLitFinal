@@ -20,7 +20,10 @@ renderer.setPixelRatio(window.devicePixelRatio);
 
 // Orbit control Setup
 const controls = new OrbitControls( camera, renderer.domElement );
-const loader = new GLTFLoader();
+
+// Loader setup
+const manager = new THREE.LoadingManager();
+const loader = new GLTFLoader(manager);
 const group = new Group()
 
 document.body.appendChild(renderer.domElement);
@@ -46,6 +49,48 @@ var mixer;
 var actions = {};
 var currentAction;
 
+// Define how far everything should travel
+const zStart = 0;     // starting Z
+const zEnd   = -10;   // deep in fog
+
+let scrollProgress = 0;
+const scrollObjects = []; // everything that should move into fog
+
+// Loader Stuff
+const loaderDiv = document.getElementById('loader');
+const loadingText = document.getElementById('loading-text');
+
+// Progress updates
+manager.onProgress = function (url, itemsLoaded, itemsTotal) {
+  const percent = Math.round((itemsLoaded / itemsTotal) * 100);
+  loadingText.textContent = `Loading... ${percent}%`;
+};
+
+// All resources loaded
+manager.onLoad = function () {
+  // Fade out
+  loaderDiv.classList.add("hidden");
+};
+
+// After fade, remove from DOM
+loaderDiv.addEventListener("transitionend", () => {
+  if (loaderDiv.classList.contains("hidden")) {
+    loaderDiv.style.display = "none";
+  }
+});
+
+function isMobile() {
+  return window.innerWidth <= 768; // tweak breakpoint as needed
+}
+
+window.addEventListener("scroll", () => {
+  if (!isMobile()) return;
+
+  const maxScroll = document.body.scrollHeight - window.innerHeight;
+  scrollProgress = window.scrollY / maxScroll; // 0 → 1
+});
+
+
 loader.load('models/physical.glb', function(gltf) {
     mixer = new THREE.AnimationMixer(gltf.scene);
     for (let anim of gltf.animations) {
@@ -63,6 +108,7 @@ loader.load('models/physical.glb', function(gltf) {
     animAction.setLoop(THREE.LoopOnce);
     animAction.play();
 
+    scrollObjects.push(manModel);
 }, undefined, function(error) {
     console.error(error);
 });
@@ -77,6 +123,8 @@ loader.load('models/chair.glb', function(gltf) {
     chair.position.y = -7;
     buttonTweenSettings.objects.chair.object = chair.position;
     scene.add(chair);
+
+    
 });
 
 // Adding Table
@@ -185,6 +233,7 @@ var buttonTweenSettings = {
         }
     }
 }
+
 function transition(param) {
     var settings = buttonTweenSettings[param];
     let animAction = actions[settings.anim];
@@ -229,9 +278,22 @@ window.transition = transition;
 animate();
 function animate() {
     requestAnimationFrame(animate);
-    mixer.update(clock.getDelta());
+    if (mixer) mixer.update(clock.getDelta());
     group.update();
+
+    // Scroll fade for mobile
+    // if (isMobile()) {
+    //   scrollObjects.forEach(obj => {
+    //     const targetZ = zStart + (zEnd - zStart) * scrollProgress;
+    //     obj.position.z += (targetZ - obj.position.z) * 0.1; // lerp
+    //   });
+    // }
+
+    if (window.innerWidth <= 768) {
+        const targetZ = 12 + scrollProgress * 15; // from z=20 to z=35
+        camera.position.z += (targetZ - camera.position.z) * 0.1; // lerp smoothing
+    }
+
     controls.update();
     renderer.render(scene, camera);
 }
-

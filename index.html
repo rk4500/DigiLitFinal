@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peak Student</title>
+    <title>FLAME Fitness</title>
     <link rel="stylesheet" href="styles.css">
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
@@ -13,23 +13,40 @@
     </style>
 </head>
 <body>
+    <div id="loader">
+      <img src="./img/dumbbell.png" alt="Loading..." class="loader-icon">
+      <p id="loading-text">Loading... 0%</p>
+    </div>
+
+
     <!-- Three.js Background -->
     <canvas id="bg"></canvas> 
 
     <!-- Content Area -->
     <div id="content">
         <nav>
-            <a href="home" id="home">PEAKSTUDENT</a>
+            <a href="home" class="logo-container">
+              <div class="logo flex jc-c ai-c">
+                <img width="60px" src="img/Diddy - 2025-08-31 17.28.20.jpg" alt="">
+                <!-- <a href="home" id="home">FLAMEFITNESS</a> -->
+                 <p id="home">FLAMEFITNESS</p>
+              </div>
+            </a>
+            <div class="middle">
+              <a href="team">Our Team</a>
+              <a href="sponsors">Sponsors</a>
+              <a href="events">Events</a>
+            </div>
             <a href="about">About</a>
         </nav>
         <div id="page-content" class="fade-in">
           <div class="title">
-            <h1>Welcome to Peak Student</h1>
-            <p>What would you like to work on today?</p>
+            <h1>Welcome to The FLAME Fitness Club</h1>
+            <p>Click the buttons to learn more!</p>
           </div>
           <div class="main-options">
-            <div class="option"><a href="mental" id='mental'>Mental</a></div>
-            <div class="option"><a href="physical" id="physical">Physical</a></div>
+            <div class="option"><a href="mental" id='mental'>Our Team</a></div>
+            <div class="option"><a href="physical" id="physical">Events</a></div>
           </div>
         </div>
     </div>
