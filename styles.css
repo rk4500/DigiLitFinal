@@ -1,16 +1,16 @@
 /* General Section Starts */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    /* margin: 0; */
+    /* padding: 0; */
+    /* box-sizing: border-box; */
     font-family: Montserrat, Arial, sans-serif;
-    font-size: 16px;
+    /* font-size: 16px;` */
     color: white;
 }
 
-div {
+/* div {
     display: flex;
-}
+} */
 
 .jc-c {
     justify-content: center;
@@ -24,26 +24,8 @@ div {
     border-radius: 5px;
 }
 
-#loader {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: #000000; /* minimalist black background */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  font-family: sans-serif;
-}
-
 .loader-icon {
-  width: 60px;
-  height: 60px;
   animation: pulse 1.2s infinite ease-in-out;
-  margin-bottom: 1rem;
 }
 
 @keyframes pulse {
@@ -52,21 +34,16 @@ div {
   100% { transform: scale(1);   opacity: 1; }
 }
 
-#loader {
-  transition: opacity 0.5s ease;
-}
 #loader.hidden {
   opacity: 0;
   pointer-events: none;
 }
-#loading-text {
-  font-size: 1rem;
-  color: #ffffff;
-  margin-top: 0.5rem;
-}
 
 
 
+/* *{
+    pointer-events: none;
+} */
 
 /* Full-screen Three.js canvas */
 #bg {
@@ -76,6 +53,7 @@ div {
     width: 100vw;
     height: 100vh;
     z-index: -1; /* Ensure it stays behind the content */
+    pointer-events: all;
 }
 
 /* Main content styling */
@@ -86,11 +64,20 @@ div {
     text-align: center;
     padding: 50px;
     padding-top: 80px;
-    overflow: hidden;
+    overflow: scroll;
+}
+
+#camera-vectors {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: grey;
+  padding: 8px;
+  color: white;
 }
 
 /* Navigation menu */
-nav {
+/* nav {
     position: fixed;
     width: 1120px;
     top: 10px;
@@ -102,9 +89,9 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
+} */
 
-a {
+/* a {
     color: white;
     text-decoration: none;
     margin: 0 15px;
@@ -127,7 +114,7 @@ nav a:hover {
 .logo-container:hover p{
     cursor: pointer;
     color: #ff6347
-}
+} */
 
 
 
@@ -317,7 +304,7 @@ strong {
 }
  /* About Section Ends */
 
- @media (max-width: 1200px) {
+ /* @media (max-width: 1200px) {
     nav {
         width: 90%;
     }
@@ -333,19 +320,16 @@ strong {
     .information-main li {
         font-size: 1.5vw;
     }
- }
+ } */
 
- @media (max-width: 850px) {
+ /* @media (max-width: 850px) {
     #content {
         overflow-x: hidden;
         overflow-y: scroll;
     }
      body {
-        min-height: 200vh; /* just for testing */
+        min-height: 200vh; 
     }
-    /* #bg {
-        position: absolute;
-    } */
     .main-options {
         padding-top: 20px;
         align-items: start;
@@ -367,4 +351,33 @@ strong {
         padding-top: 20px;
         z-index: 3
     }
- }
+ } */
+
+
+@import "tailwindcss";
+
+.fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Add support for animation delays */
+.animate-delay-75  { animation-delay: 0.075s; }
+.animate-delay-100 { animation-delay: 0.1s; }
+.animate-delay-150 { animation-delay: 0.15s; }
+.animate-delay-200 { animation-delay: 0.2s; }
+.animate-delay-300 { animation-delay: 0.3s; }
+.animate-delay-500 { animation-delay: 0.5s; }
+.animate-delay-700 { animation-delay: 0.7s; }
+.animate-delay-1000 { animation-delay: 1s; }
+
+

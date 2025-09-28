@@ -49,3 +49,23 @@ window.addEventListener("click", (event) => {
         loadPage(target.getAttribute("href"), target.getAttribute("id"));
     }
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const cards = entry.target.querySelectorAll(".team-card");
+        cards.forEach((card, i) => {
+          setTimeout(() => {
+            card.classList.remove("opacity-0", "translate-y-10");
+            card.classList.add("opacity-100", "translate-y-0");
+          }, i * 150); // stagger by 150ms
+        });
+      }
+    });
+  }, { threshold: 0.2 });
+
+  // Observe each section (trainers & EC)
+  document.querySelectorAll(".team-section").forEach((section) => observer.observe(section));
+});
+

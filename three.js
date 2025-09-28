@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { FlyControls } from 'three/addons/controls/FlyControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Group, Easing, Tween } from '@tweenjs/tween.js'
 
@@ -7,6 +8,25 @@ import { Group, Easing, Tween } from '@tweenjs/tween.js'
 const scene = new THREE.Scene();
 scene.fog = new THREE.Fog('#000000', 15, 18); // #232323
 scene.background = new THREE.Color('#000000');
+
+// // XY plane (default GridHelper)
+// const gridXY = new THREE.GridHelper(50, 50, 0x888888, 0x444444);
+// scene.add(gridXY);
+
+// // XZ plane (rotate so it's vertical)
+// const gridXZ = new THREE.GridHelper(50, 50, 0x888888, 0x444444);
+// gridXZ.rotation.x = Math.PI / 2;
+// scene.add(gridXZ);
+
+// // YZ plane (rotate so it's vertical the other way)
+// const gridYZ = new THREE.GridHelper(50, 50, 0x888888, 0x444444);
+// gridYZ.rotation.z = Math.PI / 2;
+// scene.add(gridYZ);
+
+// // Also add axes helper
+// const axesHelper = new THREE.AxesHelper(10);
+// scene.add(axesHelper);
+
 
 // Camera setup
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -20,6 +40,23 @@ renderer.setPixelRatio(window.devicePixelRatio);
 
 // Orbit control Setup
 const controls = new OrbitControls( camera, renderer.domElement );
+// controls.enabled = false;
+// const Flycontrols = new FlyControls(camera, renderer.domElement);
+let useFly = false;
+// window.addEventListener("keydown", (e) => {
+//   if (e.key.toLowerCase() === "l") {
+//     useFly = !useFly;
+//     orbitControls.enabled = !useFly;
+//     console.log(`Switched to ${useFly ? "Fly" : "Orbit"} controls`);
+//   }
+// });
+
+// // Settings
+// Flycontrols.movementSpeed = 20;     // Speed of movement
+// Flycontrols.rollSpeed = Math.PI / 6; // How fast you roll with Q/E
+// Flycontrols.dragToLook = true;     // Click+drag to look around
+// Flycontrols.autoForward = false;   // Move only when pressing W
+
 
 // Loader setup
 const manager = new THREE.LoadingManager();
@@ -27,9 +64,9 @@ const loader = new GLTFLoader(manager);
 const group = new Group()
 
 document.body.appendChild(renderer.domElement);
-// controls.enablePan = false;
-// controls.enableZoom = false;
-// controls.enableRotate = false;
+controls.enablePan = false;
+controls.enableZoom = false;
+controls.enableRotate = false;
 var clock = new THREE.Clock();
 
 // Adding Light
@@ -65,6 +102,11 @@ manager.onProgress = function (url, itemsLoaded, itemsTotal) {
   const percent = Math.round((itemsLoaded / itemsTotal) * 100);
   loadingText.textContent = `Loading... ${percent}%`;
 };
+
+// 4. set the spans with the queried HTML DOM elements
+let cameraDirection = new THREE.Vector3()
+let camPositionSpan = document.querySelector("#position");
+let camLookAtSpan = document.querySelector("#lookingAt");
 
 // All resources loaded
 manager.onLoad = function () {
@@ -210,6 +252,12 @@ var buttonTweenSettings = {
         camera: {position: {x: 0, y: 5, z: 20}},
         anim: 'Appear'
     },
+    team: {
+        model: {position: {x: 15, y: 0, z: 0}},
+        camera: {position: {x: -7, y: 3, z: 10}},
+        anim: 'Appear',
+        // miscObjs: ['chair']
+    },
     objects: {
         chair: {
             object: chair,
@@ -289,11 +337,25 @@ function animate() {
     //   });
     // }
 
+
     if (window.innerWidth <= 768) {
         const targetZ = 12 + scrollProgress * 15; // from z=20 to z=35
         camera.position.z += (targetZ - camera.position.z) * 0.1; // lerp smoothing
     }
-
-    controls.update();
+    
+      // 5. calculate and display the vector values on screen
+    // this copies the camera's unit vector direction to cameraDirection
+    camera.getWorldDirection(cameraDirection)
+    // scale the unit vector up to get a more intuitive value
+    cameraDirection.set(cameraDirection.x * 100, cameraDirection.y * 100, cameraDirection.z * 100)
+    // update the onscreen spans with the camera's position and lookAt vectors
+    camPositionSpan.innerHTML = `Position: (${camera.position.x.toFixed(1)}, ${camera.position.y.toFixed(1)}, ${camera.position.z.toFixed(1)})`;
+    camLookAtSpan.innerHTML = `LookAt: (${(camera.position.x + cameraDirection.x).toFixed(1)}, ${(camera.position.y + cameraDirection.y).toFixed(1)}, ${(camera.position.z + cameraDirection.z).toFixed(1)})`;  
+    if(useFly){
+        Flycontrols.update(0.01);
+    }
+    else{
+        controls.update();
+    }
     renderer.render(scene, camera);
 }

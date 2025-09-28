@@ -1,23 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLAME Fitness</title>
-    <script>
-      if (window.location.pathname !== '/') {
-          window.location.href = '/';
-      }
-    </script>
-</head>
-<body>
-  <div class="title">
-    <h1>Welcome to The FLAME Fitness Club</h1>
-    <p>Click the buttons to learn more!</p>
-  </div>
-  <div class="main-options">
-    <div class="option" id="mental"><a href="mental" id='mental'>Our Team</a></div>
-    <div class="option" id="physical"><a href="physical" id="physical">Events</a></div>
-  </div>
-</body>
-</html>
+<div class="title flex">
+  <h1>Welcome to The FLAME Fitness Club</h1>
+  <p>Click the buttons to learn more!</p>
+</div>
+<div class="main-options flex">
+  <div class="option"><a href="team" id='mental'>Our Team</a></div>
+  <div class="option"><a href="physical" id="physical">Events</a></div>
+</div>
