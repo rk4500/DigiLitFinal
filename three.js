@@ -258,6 +258,11 @@ var buttonTweenSettings = {
         anim: 'Appear',
         // miscObjs: ['chair']
     },
+    events: {
+        model:  { position: { x: -15, y: 0, z: 0 } },  
+        camera: { position: { x: 7,  y: 3, z: 10 } },
+        anim: 'Appear',
+    },
     objects: {
         chair: {
             object: chair,
